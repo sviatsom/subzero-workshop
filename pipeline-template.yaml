@@ -163,11 +163,7 @@ Resources:
           - Type: PLAINTEXT
             Name: TARGET_REGIONS
             Value:
-              Fn::Join: [ ' ', [!Ref DeploymentRegion1]]
-          - Type: PLAINTEXT
-            Name: TARGET_REGIONS
-            Value:
-              Fn::Join: [ ' ', [!Ref DeploymentRegion2]]
+              Fn::Join: [ ' ', [!Ref DeploymentRegion1, !Ref DeploymentRegion2]]
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED
