@@ -36,7 +36,7 @@ Parameters:
       - eu-west-1
       - eu-west-2
       - eu-central-1
-  
+
   DeploymentRegion2:
     Type: String
     Description: Target deployment region.
@@ -62,6 +62,7 @@ Metadata:
         Parameters:
           - AppName
           - DeploymentRegion1
+          - DeploymentRegion2
 
 Resources:
 
@@ -185,6 +186,7 @@ Resources:
             Type: S3
             Location: !Sub 'subzero-workshop-${DeploymentRegion1}-${AWS::AccountId}'
           Region: !Ref DeploymentRegion1
+
         - ArtifactStore:
             Type: S3
             Location: !Sub 'subzero-workshop-${DeploymentRegion2}-${AWS::AccountId}'
@@ -244,7 +246,12 @@ Resources:
                 RoleArn: !GetAtt CloudFormationRole.Arn
                 StackName: !Sub ${AppName}-subzero-workshop
                 TemplatePath: !Sub 'BuildArtifact::packaged-${DeploymentRegion1}.yaml'
+                ParameterOverrides: !Sub |
+                  {
+                    "AppName": "${AppName}"
+                  }
               RunOrder: 1
+
             - Name: !Ref DeploymentRegion2
               Region: !Ref DeploymentRegion2
               InputArtifacts:
@@ -261,6 +268,10 @@ Resources:
                 RoleArn: !GetAtt CloudFormationRole.Arn
                 StackName: !Sub ${AppName}-subzero-workshop
                 TemplatePath: !Sub 'BuildArtifact::packaged-${DeploymentRegion2}.yaml'
+                ParameterOverrides: !Sub |
+                  {
+                    "AppName": "${AppName}"
+                  }
               RunOrder: 1
 
   PipelineWebHook:
